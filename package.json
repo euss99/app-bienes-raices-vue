@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mdi/font": "^7.2.96",
     "firebase": "^10.1.0",
     "pinia": "^2.1.4",
     "vee-validate": "^4.11.1",
