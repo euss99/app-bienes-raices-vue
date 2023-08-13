@@ -4,9 +4,17 @@ import { collection, addDoc } from "firebase/firestore";
 import { useFirestore } from "vuefire";
 import { useRouter } from "vue-router";
 import { validationSchema, imageSchema } from "@/validation/propiedadSchema";
+import useImage from "@/composables/useImage";
+import useLocationMap from "@/composables/useLocationMap";
+
+import "leaflet/dist/leaflet.css";
+import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
 
 const db = useFirestore();
 const router = useRouter();
+
+const { url, uploadImage, image } = useImage();
+const { zoom, coordenadas, pin } = useLocationMap();
 
 const { handleSubmit } = useForm({
   validationSchema: {
@@ -33,6 +41,8 @@ const submit = handleSubmit(async (values) => {
   try {
     await addDoc(collection(db, "propiedades"), {
       ...propiedad,
+      imagen: url.value,
+      ubicacion: coordenadas.value,
     });
 
     router.push({ name: "admin-propiedades" });
@@ -43,7 +53,7 @@ const submit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <v-card max-width="800" flat class="mx-auto my-10"> 
+  <v-card max-width="800" flat class="mx-auto my-10">
     <v-card-title class="text-h4 font-weight-bold" tag="h3">
       Nueva propiedad
     </v-card-title>
@@ -65,7 +75,16 @@ const submit = handleSubmit(async (values) => {
         class="mb-5"
         v-model="imagen.value.value"
         :error-messages="imagen.errorMessage.value"
+        hint="Solo acepta imágenes jpeg"
+        persistent-hint
+        @change="uploadImage"
       />
+
+      <div v-if="image" class="my-5">
+        <p class="font-weight-bold">Vista previa de la imágen:</p>
+        <img :src="image" class="w-50" alt="Preview de la imágen" />
+      </div>
+
       <v-text-field
         class="mb-5"
         label="Precio"
@@ -112,6 +131,20 @@ const submit = handleSubmit(async (values) => {
         v-model="alberca.value.value"
         :error-messages="alberca.errorMessage.value"
       />
+
+      <h3 class="font-weicht-bold mb-3">Ubicación</h3>
+      <div class="mb-5" style="height: 600px">
+        <LMap
+          v-model:zoom="zoom"
+          :center="coordenadas"
+          :use-global-leaflet="false"
+        >
+          <LMarker :lat-lng="coordenadas" draggable @moveend="pin" />
+          <LTileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          ></LTileLayer>
+        </LMap>
+      </div>
 
       <v-btn color="blue-darken-1" block @click="submit">
         Agregar propiedad
