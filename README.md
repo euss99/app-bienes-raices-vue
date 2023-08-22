@@ -54,6 +54,13 @@ La carpeta `composables` contiene diversos composables para gestionar funcionali
 
 La carpeta `store` contiene la lógica relacionada con la autenticación, permitiendo a los usuarios administradores acceder a las funcionalidades de gestión de propiedades.
 
+## Acceso a Cuenta de Administrador
+
+Puedes acceder a la cuenta de administrador utilizando las siguientes credenciales:
+
+- **Email**: correo@correo.com
+- **Contraseña**: password
+
 ## Aprendizaje Significativo
 
 Durante el desarrollo de este proyecto, se ha adquirido un conocimiento valioso en la implementación de un backend utilizando Firebase, incluyendo el almacenamiento de imágenes con Firebase Storage y la gestión de la información con Firestore. Además, se ha profundizado en la creación de composables y funciones reutilizables para mejorar la modularidad y eficiencia del código.
